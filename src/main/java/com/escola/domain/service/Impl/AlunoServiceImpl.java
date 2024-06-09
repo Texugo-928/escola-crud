@@ -9,6 +9,7 @@ import java.util.Map;
 import org.springframework.stereotype.Service;
 
 import com.escola.domain.model.Aluno;
+import com.escola.domain.model.Endereco;
 import com.escola.domain.repository.AlunoRepository;
 import com.escola.domain.service.AlunoService;
 
@@ -23,10 +24,22 @@ public class AlunoServiceImpl implements AlunoService {
 
     @Override
     public Aluno create(Aluno alunoToCreate) {
-        // TODO Auto-generated method stub
+        Boolean verificacao = alunoRepository.existsByNomeAndDataNascimentoAndNomeMaeAndNomePai(alunoToCreate.getNome(), alunoToCreate.getData_nascimento(), alunoToCreate.getNome_mae(), alunoToCreate.getNome_pai());
+
+        if (verificacao) {
+            throw new Exception("Aluno já foi cadastrado");
+        }
+
         String errorMessage = validarFaixaEtaria(alunoToCreate.getSerie(), alunoToCreate.getSegmento(),  alunoToCreate.getData_nascimento());
 
-        return null;
+        if (errorMessage.equalsIgnoreCase("")) {
+           Aluno retorno = alunoRepository.save(alunoToCreate);
+
+           return retorno;
+        }
+        else {
+            throw new Exception(errorMessage);
+        }
     }
 
     @Override
@@ -46,14 +59,16 @@ public class AlunoServiceImpl implements AlunoService {
 
     @Override
     public Aluno findByName(String nome) {
-        // TODO Auto-generated method stub
-        return null;
+        Aluno aluno = alunoRepository.findFirstByNome(nome).orElseThrow();
+
+        return aluno;
     }
 
     @Override
     public List<Aluno> findBySerie(String serie) {
-        // TODO Auto-generated method stub
-        return null;
+        List<Aluno> alunos = alunoRepository.findBySerie(serie).orElseThrow();
+
+        return alunos;
     }
 
     @Override
@@ -62,9 +77,46 @@ public class AlunoServiceImpl implements AlunoService {
     }
 
     @Override
-    public Aluno update(Long id) {
-        // TODO Auto-generated method stub
-        return null;
+    public Aluno update(Long id, String nome, String dataNascimento, String serie, String segmento, String nomeMae, String nomePai) {
+        Aluno aluno = alunoRepository.findById(id).orElseThrow();
+
+        if (!nome.equalsIgnoreCase("")) {
+            aluno.setNome(nome);
+        }
+
+        if (!dataNascimento.equalsIgnoreCase("")) {
+            aluno.setData_nascimento(dataNascimento);
+        }
+
+        /* 
+
+        //Teria que ver se estou atualizando algum endereço da lista,
+        //ou se estou incluindo um novo endereco.
+
+        if (!endereco.isEmpty()) {
+            aluno.setEndereco(null);
+        }
+        */
+
+        if (!serie.equalsIgnoreCase("")) {
+            aluno.setSerie(serie);
+        }
+
+        if (!segmento.equalsIgnoreCase("")) {
+            aluno.setSegmento(segmento);
+        }
+
+        if (!nomeMae.equalsIgnoreCase("")) {
+            aluno.setNome_mae(nomeMae);
+        }
+
+        if (!nomePai.equalsIgnoreCase("")) {
+            aluno.setNome_pai(nomePai);
+        }
+
+        alunoRepository.save(aluno);
+
+        return aluno;
     }
 
     private String validarFaixaEtaria(String serie, String segmento, String dataNascimento) {

@@ -16,7 +16,8 @@ public interface AlunoService {
 
     List<Aluno> getAll();
 
-    Aluno update(Long id);
+    //TODO: Incluir o Endereco
+    Aluno update(Long id, String nome, String dataNascimento, String serie, String segmento, String nomeMae, String nomePai);
 
     Aluno delete(Long id);
 
