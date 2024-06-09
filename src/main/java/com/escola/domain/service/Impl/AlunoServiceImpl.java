@@ -9,7 +9,6 @@ import java.util.Map;
 import org.springframework.stereotype.Service;
 
 import com.escola.domain.model.Aluno;
-import com.escola.domain.model.Endereco;
 import com.escola.domain.repository.AlunoRepository;
 import com.escola.domain.service.AlunoService;
 
@@ -23,22 +22,27 @@ public class AlunoServiceImpl implements AlunoService {
     }
 
     @Override
-    public Aluno create(Aluno alunoToCreate) {
-        Boolean verificacao = alunoRepository.existsByNomeAndDataNascimentoAndNomeMaeAndNomePai(alunoToCreate.getNome(), alunoToCreate.getData_nascimento(), alunoToCreate.getNome_mae(), alunoToCreate.getNome_pai());
+    public Aluno create(Aluno alunoToCreate) throws Exception {
+        Boolean verificacao = alunoRepository.existsByNomeAndDataNascimentoAndNomeMaeAndNomePai(alunoToCreate.getNome(), alunoToCreate.getDataNascimento(), alunoToCreate.getNomeMae(), alunoToCreate.getNomePai());
 
         if (verificacao) {
             throw new Exception("Aluno já foi cadastrado");
         }
 
-        String errorMessage = validarFaixaEtaria(alunoToCreate.getSerie(), alunoToCreate.getSegmento(),  alunoToCreate.getData_nascimento());
+        String validacao = validarSegmento(alunoToCreate.getSerie(), alunoToCreate.getSegmento());
 
-        if (errorMessage.equalsIgnoreCase("")) {
-           Aluno retorno = alunoRepository.save(alunoToCreate);
+        if (!validacao.equalsIgnoreCase("")) {
+            throw new Exception(validacao);
+        }
 
-           return retorno;
+        validacao = validarFaixaEtaria(alunoToCreate.getSegmento(),  alunoToCreate.getDataNascimento());
+
+        if (!validacao.equalsIgnoreCase("")) {
+            throw new Exception(validacao);
         }
         else {
-            throw new Exception(errorMessage);
+            Aluno retorno = alunoRepository.save(alunoToCreate);
+            return retorno;
         }
     }
 
@@ -85,7 +89,7 @@ public class AlunoServiceImpl implements AlunoService {
         }
 
         if (!dataNascimento.equalsIgnoreCase("")) {
-            aluno.setData_nascimento(dataNascimento);
+            aluno.setDataNascimento(dataNascimento);
         }
 
         /* 
@@ -107,11 +111,11 @@ public class AlunoServiceImpl implements AlunoService {
         }
 
         if (!nomeMae.equalsIgnoreCase("")) {
-            aluno.setNome_mae(nomeMae);
+            aluno.setNomeMae(nomeMae);
         }
 
         if (!nomePai.equalsIgnoreCase("")) {
-            aluno.setNome_pai(nomePai);
+            aluno.setNomePai(nomePai);
         }
 
         alunoRepository.save(aluno);
@@ -119,34 +123,46 @@ public class AlunoServiceImpl implements AlunoService {
         return aluno;
     }
 
-    private String validarFaixaEtaria(String serie, String segmento, String dataNascimento) {
+    private String validarSegmento(String serie, String segmento) {
     
-        Map<String[], int[]> faixaEtariaPorSerieSegmento = new HashMap<>();
-        faixaEtariaPorSerieSegmento.put(new String[]{"Infantil", "G1"}, new int[]{3, 5});
-        faixaEtariaPorSerieSegmento.put(new String[]{"Infantil", "G2"}, new int[]{3, 5});
-        faixaEtariaPorSerieSegmento.put(new String[]{"Infantil", "G3"}, new int[]{3, 5});
-        faixaEtariaPorSerieSegmento.put(new String[]{"Anos iniciais", "1°"}, new int[]{6, 10});
-        faixaEtariaPorSerieSegmento.put(new String[]{"Anos iniciais", "2°"}, new int[]{6, 10});
-        faixaEtariaPorSerieSegmento.put(new String[]{"Anos iniciais", "3°"}, new int[]{6, 10});
-        faixaEtariaPorSerieSegmento.put(new String[]{"Anos iniciais", "4°"}, new int[]{6, 10});
-        faixaEtariaPorSerieSegmento.put(new String[]{"Anos iniciais", "5°"}, new int[]{6, 10});
-        faixaEtariaPorSerieSegmento.put(new String[]{"Anos finais", "6°"}, new int[]{11, 14});
-        faixaEtariaPorSerieSegmento.put(new String[]{"Anos finais", "7°"}, new int[]{11, 14});
-        faixaEtariaPorSerieSegmento.put(new String[]{"Anos finais", "8°"}, new int[]{11, 14});
-        faixaEtariaPorSerieSegmento.put(new String[]{"Anos finais", "9°"}, new int[]{11, 14});
-        faixaEtariaPorSerieSegmento.put(new String[]{"Ensino Médio", "1° EM"}, new int[]{15, 17});
-        faixaEtariaPorSerieSegmento.put(new String[]{"Ensino Médio", "2° EM"}, new int[]{15, 17});
-        faixaEtariaPorSerieSegmento.put(new String[]{"Ensino Médio", "3° EM"}, new int[]{15, 17});
+        Map<String, String> SeriePorSegmento = new HashMap<>();
+        SeriePorSegmento.put("G1", "Infantil");
+        SeriePorSegmento.put("G2", "Infantil");
+        SeriePorSegmento.put("G3", "Infantil");
+        SeriePorSegmento.put("1°", "Anos iniciais");
+        SeriePorSegmento.put("2°", "Anos iniciais");
+        SeriePorSegmento.put("3°", "Anos iniciais");
+        SeriePorSegmento.put("4°", "Anos iniciais");
+        SeriePorSegmento.put("5°", "Anos iniciais");
+        SeriePorSegmento.put("6°", "Anos finais");
+        SeriePorSegmento.put("7°", "Anos finais");
+        SeriePorSegmento.put("8°", "Anos finais");
+        SeriePorSegmento.put("9°", "Anos finais");
+        SeriePorSegmento.put("1° EM", "Ensino Médio");
+        SeriePorSegmento.put("2° EM", "Ensino Médio");
+        SeriePorSegmento.put("3° EM", "Ensino Médio");
 
-        String[] serieSegmento = new String[]{segmento, serie};
+        Map<String, String> serieSegmento = new HashMap<>();
+        serieSegmento.put(serie, segmento);
 
-        if (!faixaEtariaPorSerieSegmento.containsKey(serieSegmento)) {
+        if (!SeriePorSegmento.equals(serieSegmento)) {
             String msg1 = "Combinação de série " + serie + " e segmento " + segmento;
             String msg2 = " não encontrada no mapeamento de faixa etária.";
             return msg1 + msg2;
         }
 
-        int[] faixaEtaria = faixaEtariaPorSerieSegmento.get(serieSegmento);
+        return "";
+    }
+
+    private String validarFaixaEtaria(String segmento, String dataNascimento) {
+    
+        Map<String, int[]> faixaEtariaPorSegmento = new HashMap<>();
+        faixaEtariaPorSegmento.put("Infantil", new int[]{3, 5});
+        faixaEtariaPorSegmento.put("Anos iniciais", new int[]{6, 10});
+        faixaEtariaPorSegmento.put("Anos finais", new int[]{11, 14});
+        faixaEtariaPorSegmento.put("Ensino Médio", new int[]{15, 17});
+
+        int[] faixaEtaria = faixaEtariaPorSegmento.get(segmento);
 
         // Formato da string de data
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
@@ -162,7 +178,7 @@ public class AlunoServiceImpl implements AlunoService {
 
         if (!(faixaEtaria[0] <= idade && idade <= faixaEtaria[1])) {
             String msg1 = "A idade do aluno não está dentro da faixa etária";
-            String msg2 = " permitida para a série " + serie + " e o segmento " + segmento + ".";
+            String msg2 = " permitida para o segmento " + segmento + ".";
             return msg1 + msg2;
         }
 

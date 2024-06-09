@@ -22,7 +22,7 @@ public class Aluno {
     private String nome;
 
     @Column(name = "data_nascimento", nullable = false)
-    private String data_nascimento;
+    private String dataNascimento;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Endereco> endereco;
@@ -34,10 +34,10 @@ public class Aluno {
     private String segmento;
 
     @Column(name = "nome_pai")
-    private String nome_pai;
+    private String nomePai;
 
     @Column(name = "nome_mae")
-    private String nome_mae;
+    private String nomeMae;
 
     public String getNome() {
         return nome;
@@ -47,12 +47,12 @@ public class Aluno {
         this.nome = nome;
     }
     
-    public String getData_nascimento() {
-        return data_nascimento;
+    public String getDataNascimento() {
+        return dataNascimento;
     }
 
-    public void setData_nascimento(String data_nascimento) {
-        this.data_nascimento = data_nascimento;
+    public void setDataNascimento(String dataNascimento) {
+        this.dataNascimento = dataNascimento;
     }
 
     public List<Endereco> getEndereco() {
@@ -79,19 +79,19 @@ public class Aluno {
         this.segmento = segmento;
     }
 
-    public String getNome_pai() {
-        return nome_pai;
+    public String getNomePai() {
+        return nomePai;
     }
 
-    public void setNome_pai(String nome_pai) {
-        this.nome_pai = nome_pai;
+    public void setNomePai(String nomePai) {
+        this.nomePai = nomePai;
     }
 
-    public String getNome_mae() {
-        return nome_mae;
+    public String getNomeMae() {
+        return nomeMae;
     }
-    public void setNome_mae(String nome_mae) {
-        this.nome_mae = nome_mae;
+    public void setNomeMae(String nomeMae) {
+        this.nomeMae = nomeMae;
     }
 
     public Long getId() {

@@ -6,7 +6,7 @@ import com.escola.domain.model.Aluno;
 
 public interface AlunoService {
 
-    Aluno create(Aluno alunoToCreate);
+    Aluno create(Aluno alunoToCreate) throws Exception;
 
     Aluno findById(Long id);
 
