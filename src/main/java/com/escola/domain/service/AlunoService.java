@@ -2,6 +2,7 @@ package com.escola.domain.service;
 
 import java.util.List;
 
+import com.escola.domain.controller.exception.CustomException;
 import com.escola.domain.model.Aluno;
 
 public interface AlunoService {
@@ -12,7 +13,7 @@ public interface AlunoService {
 
     Aluno findByName(String nome);
 
-    List<Aluno> findBySerie(String serie);
+    List<Aluno> findBySerie(String serie) throws CustomException;
 
     List<Aluno> getAll();
 

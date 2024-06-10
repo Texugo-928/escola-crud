@@ -18,8 +18,14 @@ import com.escola.domain.controller.exception.CustomException;
 import com.escola.domain.model.Aluno;
 import com.escola.domain.service.AlunoService;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 @RestController
 @RequestMapping("/aluno")
+@Tag(name = "Aluno Controller", description = "RESTful API for managing alunos.")
 public class AlunoController {
 
     private final AlunoService alunoService;
@@ -29,6 +35,13 @@ public class AlunoController {
     }
 
     @PostMapping
+    @Operation(summary = "Create a new aluno", description = "Create a new aluno and return the created aluno's data")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "201", description = "User created successfully"),
+        @ApiResponse(responseCode = "400", description = "Treated Exception"),
+        //@ApiResponse(responseCode = "422", description = "Invalid aluno data provided"),
+        @ApiResponse(responseCode = "500", description = "Unexpected Server Error")
+    })
     public ResponseEntity<Object> create(@RequestBody Aluno alunoToCreate) throws CustomException {
         try{
             Aluno alunoCreated = alunoService.create(alunoToCreate);
@@ -49,6 +62,11 @@ public class AlunoController {
     }
 
     @GetMapping("/{id}")
+    @Operation(summary = "Get a aluno by ID", description = "Retrieve a specific aluno based on its ID")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Operation successful"),
+        @ApiResponse(responseCode = "404", description = "Aluno not found")
+    })
     public ResponseEntity<Aluno> findById(@PathVariable Long id) {
         Aluno aluno = alunoService.findById(id);
 
@@ -56,6 +74,11 @@ public class AlunoController {
     }
 
     @GetMapping("/nome/{nome}")
+    @Operation(summary = "Get a aluno by name", description = "Retrieve a specific aluno based on its name")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Operation successful"),
+        @ApiResponse(responseCode = "404", description = "Aluno not found")
+    })
     public ResponseEntity<Aluno> findByName(@PathVariable String nome) {
         Aluno aluno = alunoService.findByName(nome);
 
@@ -63,13 +86,27 @@ public class AlunoController {
     }
 
     @GetMapping("/serie/{serie}")
-    public ResponseEntity<List<Aluno>> findBySerie(@PathVariable String serie) {
-        List<Aluno> alunos = alunoService.findBySerie(serie.toUpperCase());
-
-        return ResponseEntity.ok(alunos);
+    @Operation(summary = "Get alunos by serie", description = "Retrieve a list of alunos based on its serie")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Operation successful"),
+        @ApiResponse(responseCode = "400", description = "Treated Exception")
+    })
+    public ResponseEntity<List<Aluno>> findBySerie(@PathVariable String serie) throws CustomException {
+        try {
+            List<Aluno> alunos = alunoService.findBySerie(serie);
+    
+            return ResponseEntity.ok(alunos);
+        }
+        catch (CustomException ex) {
+            throw ex;
+        }
     }
 
     @GetMapping
+    @Operation(summary = "Get all alunos", description = "Retrieve a list of all registered alunos")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Operation successful")
+    })
     public ResponseEntity<List<Aluno>> getAll() {
         List<Aluno> alunos = alunoService.getAll();
 
@@ -89,6 +126,11 @@ public class AlunoController {
     }
 
     @DeleteMapping("/{id}")
+    @Operation(summary = "Delete a aluno", description = "Delete an existing aluno based on its ID")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Operation successful"),
+        @ApiResponse(responseCode = "404", description = "Aluno not found")
+    })
     public ResponseEntity<Aluno> delete(@PathVariable Long id) {
         Aluno alunoDeleted = alunoService.delete(id);
 
