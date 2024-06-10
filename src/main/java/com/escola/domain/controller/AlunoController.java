@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import com.escola.domain.controller.exception.CustomException;
 import com.escola.domain.model.Aluno;
 import com.escola.domain.service.AlunoService;
 
@@ -28,8 +29,8 @@ public class AlunoController {
     }
 
     @PostMapping
-    public ResponseEntity<Object> create(@RequestBody Aluno alunoToCreate) {
-        try {
+    public ResponseEntity<Object> create(@RequestBody Aluno alunoToCreate) throws CustomException {
+        try{
             Aluno alunoCreated = alunoService.create(alunoToCreate);
 
             URI location = ServletUriComponentsBuilder.fromCurrentRequest()
@@ -39,8 +40,11 @@ public class AlunoController {
     
             return ResponseEntity.created(location).body(alunoCreated);
         }
+        catch (CustomException ex) {
+            throw ex;
+        }
         catch (Exception e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
+            throw new RuntimeException(e);
         }
     }
 
@@ -51,16 +55,16 @@ public class AlunoController {
         return ResponseEntity.ok(aluno);
     }
 
-    @GetMapping("/{nome}")
+    @GetMapping("/nome/{nome}")
     public ResponseEntity<Aluno> findByName(@PathVariable String nome) {
         Aluno aluno = alunoService.findByName(nome);
 
         return ResponseEntity.ok(aluno);
     }
 
-    @GetMapping("/{serie}")
+    @GetMapping("/serie/{serie}")
     public ResponseEntity<List<Aluno>> findBySerie(@PathVariable String serie) {
-        List<Aluno> alunos = alunoService.findBySerie(serie);
+        List<Aluno> alunos = alunoService.findBySerie(serie.toUpperCase());
 
         return ResponseEntity.ok(alunos);
     }

@@ -2,12 +2,14 @@ package com.escola.domain.service.Impl;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.springframework.stereotype.Service;
 
+import com.escola.domain.controller.exception.CustomException;
 import com.escola.domain.model.Aluno;
 import com.escola.domain.repository.AlunoRepository;
 import com.escola.domain.service.AlunoService;
@@ -22,23 +24,23 @@ public class AlunoServiceImpl implements AlunoService {
     }
 
     @Override
-    public Aluno create(Aluno alunoToCreate) throws Exception {
+    public Aluno create(Aluno alunoToCreate) throws CustomException {
         Boolean verificacao = alunoRepository.existsByNomeAndDataNascimentoAndNomeMaeAndNomePai(alunoToCreate.getNome(), alunoToCreate.getDataNascimento(), alunoToCreate.getNomeMae(), alunoToCreate.getNomePai());
 
         if (verificacao) {
-            throw new Exception("Aluno já foi cadastrado");
+            throw new CustomException("Aluno já foi cadastrado");
         }
 
         String validacao = validarSegmento(alunoToCreate.getSerie(), alunoToCreate.getSegmento());
 
         if (!validacao.equalsIgnoreCase("")) {
-            throw new Exception(validacao);
+            throw new CustomException(validacao);
         }
 
         validacao = validarFaixaEtaria(alunoToCreate.getSegmento(),  alunoToCreate.getDataNascimento());
 
         if (!validacao.equalsIgnoreCase("")) {
-            throw new Exception(validacao);
+            throw new CustomException(validacao);
         }
         else {
             Aluno retorno = alunoRepository.save(alunoToCreate);
@@ -142,19 +144,20 @@ public class AlunoServiceImpl implements AlunoService {
         SeriePorSegmento.put("2° EM", "Ensino Médio");
         SeriePorSegmento.put("3° EM", "Ensino Médio");
 
-        Map<String, String> serieSegmento = new HashMap<>();
-        serieSegmento.put(serie, segmento);
+        if (SeriePorSegmento.get(serie) == null) {
+            String msg = "A série " + serie + " informada não foi encontrada.";
+            return msg;            
+        }
 
-        if (!SeriePorSegmento.equals(serieSegmento)) {
-            String msg1 = "Combinação de série " + serie + " e segmento " + segmento;
-            String msg2 = " não encontrada no mapeamento de faixa etária.";
-            return msg1 + msg2;
+        if (!SeriePorSegmento.get(serie).equals(segmento)) {
+            String msg = "Combinação de série " + serie + " e segmento " + segmento + " não encontrada.";
+            return msg;
         }
 
         return "";
     }
 
-    private String validarFaixaEtaria(String segmento, String dataNascimento) {
+    private String validarFaixaEtaria(String segmento, String dataNascimento) throws CustomException {
     
         Map<String, int[]> faixaEtariaPorSegmento = new HashMap<>();
         faixaEtariaPorSegmento.put("Infantil", new int[]{3, 5});
@@ -164,25 +167,31 @@ public class AlunoServiceImpl implements AlunoService {
 
         int[] faixaEtaria = faixaEtariaPorSegmento.get(segmento);
 
-        // Formato da string de data
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        try{
+            // Formato da string de data
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+            
+            // Convertendo a string para LocalDate
+            LocalDate data = LocalDate.parse(dataNascimento, formatter);
 
-        // Convertendo a string para LocalDate
-        LocalDate data = LocalDate.parse(dataNascimento, formatter);
-
-        LocalDate hoje = LocalDate.now();
-        int idade = hoje.getYear() - data.getYear() -
-                ((hoje.getMonthValue() < data.getMonthValue() ||
-                        (hoje.getMonthValue() == data.getMonthValue() &&
-                                hoje.getDayOfMonth() < data.getDayOfMonth())) ? 1 : 0);
-
-        if (!(faixaEtaria[0] <= idade && idade <= faixaEtaria[1])) {
-            String msg1 = "A idade do aluno não está dentro da faixa etária";
-            String msg2 = " permitida para o segmento " + segmento + ".";
-            return msg1 + msg2;
+            LocalDate hoje = LocalDate.now();
+            int idade = hoje.getYear() - data.getYear() -
+                    ((hoje.getMonthValue() < data.getMonthValue() ||
+                            (hoje.getMonthValue() == data.getMonthValue() &&
+                                    hoje.getDayOfMonth() < data.getDayOfMonth())) ? 1 : 0);
+    
+            if (!(faixaEtaria[0] <= idade && idade <= faixaEtaria[1])) {
+                String msg1 = "A idade do aluno não está dentro da faixa etária";
+                String msg2 = " permitida para o segmento " + segmento + ".";
+                return msg1 + msg2;
+            }
+    
+            return "";
+        }
+        catch (DateTimeParseException ex) {
+            throw new CustomException("DateTimeParseException: " + ex.getMessage());
         }
 
-        return "";
     }
 
 }
