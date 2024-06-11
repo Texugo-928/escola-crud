@@ -7,9 +7,31 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.escola.domain.controller.exception.CustomException;
+import com.escola.domain.model.Aluno;
 import com.escola.domain.service.validation.AlunoValidation;
 
 public class AlunoValidationImpl implements AlunoValidation {
+
+    @Override
+    public void validateAluno(Aluno aluno) throws CustomException {
+    
+        if (aluno.getNome() == null || aluno.getNome().isEmpty()) {
+            throw new CustomException("O atributo nome não pode ser nulo ou vazio");
+        }
+    
+        if (aluno.getDataNascimento() == null || aluno.getDataNascimento().isEmpty()) {
+            throw new CustomException("O atributo dataNascimento não pode ser nulo ou vazio");
+        }
+    
+        if (aluno.getSerie() == null || aluno.getSerie().isEmpty()) {
+            throw new CustomException("O atributo serie não pode ser nulo ou vazio");
+        }
+    
+        if (aluno.getSegmento() == null || aluno.getSegmento().isEmpty()) {
+            throw new CustomException("O atributo segmento não pode ser nulo ou vazio");
+        }
+        
+    }
 
     @Override
     public String validateSerie(String serie) throws CustomException {

@@ -3,8 +3,11 @@ package com.escola.domain.service.validation;
 import java.time.LocalDate;
 
 import com.escola.domain.controller.exception.CustomException;
+import com.escola.domain.model.Aluno;
 
 public interface AlunoValidation {
+
+        void validateAluno(Aluno aluno) throws CustomException;
 
         String validateSerie(String serie) throws CustomException;
 

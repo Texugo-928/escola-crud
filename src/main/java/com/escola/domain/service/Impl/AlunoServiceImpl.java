@@ -115,6 +115,7 @@ public class AlunoServiceImpl implements AlunoService {
     private void validacoesCreate(Aluno aluno) throws Exception {
           
         // Validar Aluno
+        alunoValidation.validateAluno(aluno);
         String serie = alunoValidation.validateSerie(aluno.getSerie());
         String segmento = alunoValidation.validateSegmento(aluno.getSegmento());
         LocalDate data = alunoValidation.validateDataNascimento(aluno.getDataNascimento());
