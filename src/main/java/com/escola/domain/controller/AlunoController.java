@@ -19,6 +19,9 @@ import com.escola.domain.model.Aluno;
 import com.escola.domain.service.AlunoService;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -37,10 +40,30 @@ public class AlunoController {
     @PostMapping
     @Operation(summary = "Create a new aluno", description = "Create a new aluno and return the created aluno's data")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "201", description = "User created successfully"),
-        @ApiResponse(responseCode = "400", description = "Treated Exception"),
+        @ApiResponse(
+            responseCode = "201",
+            description = "User created successfully",
+            content = @Content(
+                mediaType = "application/json",
+                schema = @Schema(implementation = Aluno.class),
+                examples = @ExampleObject(value = "{\"id\": 1, \"name\": \"John Doe\", \"dataNascimento\": \"2020-02-25\", \"endereco\": [{ \"id\": 1, \"tipo\": \"Residencial\", \"rua\": \"Rua dos calçados\", \"numero\": \"123\", \"cep\": \"82222-585\", \"complemento\": \"casa 1\" }], \"serie\": \"G1\", \"segmento\": \"Infantil\", \"nomePai\": \"São João\", \"nomeMae\": \"Alice Pires\" }")
+                    )
+        ),
+        @ApiResponse(
+            responseCode = "400",
+            description = "Treated Exception",
+            content = @Content(mediaType = "application/json", schema = @Schema(implementation = String.class))
+        ),
         //@ApiResponse(responseCode = "422", description = "Invalid aluno data provided"),
-        @ApiResponse(responseCode = "500", description = "Unexpected Server Error")
+        @ApiResponse(
+            responseCode = "500",
+            description = "Unexpected Server Error",
+            content = @Content(
+                mediaType = "application/json",
+                schema = @Schema(implementation = String.class),
+                examples = @ExampleObject(value = "Unexpected Server Error, see the logs.")
+            )
+        )
     })
     public ResponseEntity<Object> create(@RequestBody Aluno alunoToCreate) throws CustomException {
         try{
@@ -64,8 +87,24 @@ public class AlunoController {
     @GetMapping("/{id}")
     @Operation(summary = "Get a aluno by ID", description = "Retrieve a specific aluno based on its ID")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Operation successful"),
-        @ApiResponse(responseCode = "404", description = "Aluno not found")
+        @ApiResponse(
+            responseCode = "200",
+            description = "Operation successful",
+            content = @Content(
+                mediaType = "application/json",
+                schema = @Schema(implementation = Aluno.class),
+                examples = @ExampleObject(value = "{\"id\": 1, \"name\": \"John Doe\", \"dataNascimento\": \"2020-02-25\", \"endereco\": [{ \"id\": 1, \"tipo\": \"Residencial\", \"rua\": \"Rua dos calçados\", \"numero\": \"123\", \"cep\": \"82222-585\", \"complemento\": \"casa 1\" }], \"serie\": \"G1\", \"segmento\": \"Infantil\", \"nomePai\": \"São João\", \"nomeMae\": \"Alice Pires\" }")
+            )            
+        ),
+        @ApiResponse(
+            responseCode = "404",
+            description = "Aluno not found",
+            content = @Content(
+                mediaType = "application/json",
+                schema = @Schema(implementation = String.class),
+                examples = @ExampleObject(value = "Resource Not Found")
+            )
+        )
     })
     public ResponseEntity<Aluno> findById(@PathVariable Long id) {
         Aluno aluno = alunoService.findById(id);
@@ -76,8 +115,24 @@ public class AlunoController {
     @GetMapping("/nome/{nome}")
     @Operation(summary = "Get a aluno by name", description = "Retrieve a specific aluno based on its name")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Operation successful"),
-        @ApiResponse(responseCode = "404", description = "Aluno not found")
+        @ApiResponse(
+            responseCode = "200",
+            description = "Operation successful",
+            content = @Content(
+                mediaType = "application/json",
+                schema = @Schema(implementation = Aluno.class),
+                examples = @ExampleObject(value = "{\"id\": 1, \"name\": \"John Doe\", \"dataNascimento\": \"2020-02-25\", \"endereco\": [{ \"id\": 1, \"tipo\": \"Residencial\", \"rua\": \"Rua dos calçados\", \"numero\": \"123\", \"cep\": \"82222-585\", \"complemento\": \"casa 1\" }], \"serie\": \"G1\", \"segmento\": \"Infantil\", \"nomePai\": \"São João\", \"nomeMae\": \"Alice Pires\" }")
+            )            
+        ),
+        @ApiResponse(
+            responseCode = "404",
+            description = "Aluno not found",
+            content = @Content(
+                mediaType = "application/json",
+                schema = @Schema(implementation = String.class),
+                examples = @ExampleObject(value = "Resource Not Found")
+            )
+        )
     })
     public ResponseEntity<Aluno> findByName(@PathVariable String nome) {
         Aluno aluno = alunoService.findByName(nome);
@@ -88,8 +143,20 @@ public class AlunoController {
     @GetMapping("/serie/{serie}")
     @Operation(summary = "Get alunos by serie", description = "Retrieve a list of alunos based on its serie")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Operation successful"),
-        @ApiResponse(responseCode = "400", description = "Treated Exception")
+        @ApiResponse(
+            responseCode = "200",
+            description = "Operation successful",
+            content = @Content(
+                mediaType = "application/json",
+                schema = @Schema(implementation = Aluno.class),
+                examples = @ExampleObject(value = "[{\"id\": 1, \"name\": \"John Doe\", \"dataNascimento\": \"2020-02-25\", \"endereco\": [{ \"id\": 1, \"tipo\": \"Residencial\", \"rua\": \"Rua dos calçados\", \"numero\": \"123\", \"cep\": \"82222-585\", \"complemento\": \"casa 1\" }], \"serie\": \"G1\", \"segmento\": \"Infantil\", \"nomePai\": \"São João\", \"nomeMae\": \"Alice Pires\" }]")
+            )            
+        ),
+        @ApiResponse(
+            responseCode = "400",
+            description = "Treated Exception",
+            content = @Content(mediaType = "application/json", schema = @Schema(implementation = String.class))
+        )
     })
     public ResponseEntity<List<Aluno>> findBySerie(@PathVariable String serie) throws CustomException {
         try {
@@ -105,7 +172,15 @@ public class AlunoController {
     @GetMapping
     @Operation(summary = "Get all alunos", description = "Retrieve a list of all registered alunos")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Operation successful")
+        @ApiResponse(
+            responseCode = "200",
+            description = "Operation successful",
+            content = @Content(
+                mediaType = "application/json",
+                schema = @Schema(implementation = Aluno.class),
+                examples = @ExampleObject(value = "[{\"id\": 1, \"name\": \"John Doe\", \"dataNascimento\": \"2020-02-25\", \"endereco\": [{ \"id\": 1, \"tipo\": \"Residencial\", \"rua\": \"Rua dos calçados\", \"numero\": \"123\", \"cep\": \"82222-585\", \"complemento\": \"casa 1\" }], \"serie\": \"G1\", \"segmento\": \"Infantil\", \"nomePai\": \"São João\", \"nomeMae\": \"Alice Pires\" }]")
+            )            
+        )
     })
     public ResponseEntity<List<Aluno>> getAll() {
         List<Aluno> alunos = alunoService.getAll();
@@ -128,8 +203,24 @@ public class AlunoController {
     @DeleteMapping("/{id}")
     @Operation(summary = "Delete a aluno", description = "Delete an existing aluno based on its ID")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Operation successful"),
-        @ApiResponse(responseCode = "404", description = "Aluno not found")
+        @ApiResponse(
+            responseCode = "200",
+            description = "Operation successful",
+            content = @Content(
+                mediaType = "application/json",
+                schema = @Schema(implementation = Aluno.class),
+                examples = @ExampleObject(value = "{\"id\": 1, \"name\": \"John Doe\", \"dataNascimento\": \"2020-02-25\", \"endereco\": [{ \"id\": 1, \"tipo\": \"Residencial\", \"rua\": \"Rua dos calçados\", \"numero\": \"123\", \"cep\": \"82222-585\", \"complemento\": \"casa 1\" }], \"serie\": \"G1\", \"segmento\": \"Infantil\", \"nomePai\": \"São João\", \"nomeMae\": \"Alice Pires\" }")
+            )            
+        ),
+        @ApiResponse(
+            responseCode = "404",
+            description = "Aluno not found",
+            content = @Content(
+                mediaType = "application/json",
+                schema = @Schema(implementation = String.class),
+                examples = @ExampleObject(value = "Resource Not Found")
+            )
+        )
     })
     public ResponseEntity<Aluno> delete(@PathVariable Long id) {
         Aluno alunoDeleted = alunoService.delete(id);
