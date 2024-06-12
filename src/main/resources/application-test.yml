@@ -1,0 +1,50 @@
+spring:
+  datasource:
+    # URL de conexão com o BD H2 em memória
+    url: jdbc:h2:mem:ambtestdb
+
+    # Classe do driver JDBC para o H2
+    #driver-class-name: org.h2.Driver 
+
+    # Usuário do BD 
+    username: ambteste
+
+    # Senha do BD
+    password:
+
+    # Modo de inicialização do BD (sempre cria as tabelas)
+    #initialization-mode: always  
+  
+  jpa:
+    # Mostrar SQL gerado pelo JPA
+    show-sql: true
+
+    # Manter o EntityManager aberto durante todo o ciclo de vida da requisição
+    open-in-view: false
+    
+    hibernate:
+      # Estratégia de criação/atualização do schema do BD pelo Hibernate
+      ddl-auto: create-drop # validate, update, create, create-drop
+    
+    properties:
+      hibernate:
+        # Formatar SQL gerado pelo Hibernate
+        format_sql: true
+
+        # Dialeto do Hibernate para o H2
+        dialect: org.hibernate.dialect.H2Dialect  
+  
+  h2:
+    console:
+      # Habilitar o console do H2
+      enabled: true
+
+      # Caminho de acesso ao console do H2
+      path: /h2-console
+      
+      settings:
+        # Habilitar rastreamento no console do H2
+        trace: false
+
+        # Permitir acesso de outras máquinas ao console do H2 (por padrão, é falso)
+        web-allow-others: false

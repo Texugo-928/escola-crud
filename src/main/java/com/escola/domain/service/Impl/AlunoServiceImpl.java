@@ -59,7 +59,7 @@ public class AlunoServiceImpl implements AlunoService {
 
         String serieAjustada = alunoValidation.validateSerie(serie);
 
-        List<Aluno> alunos = alunoRepository.findBySerie(serieAjustada).orElseThrow();
+        List<Aluno> alunos = alunoRepository.findBySerie(serieAjustada);
 
         return alunos;
     }
