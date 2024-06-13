@@ -80,7 +80,7 @@ public class AlunoServiceImplTest {
     }
 
     @Test
-    public void createReturnFail() throws Exception {
+    public void createReturnFail1() throws Exception {
         // Arrange
         // Mock do comportamento do validation
         when(alunoValidationMock.validateSerie(alunoExistente.getSerie())).thenReturn(alunoExistente.getSerie());
@@ -91,8 +91,30 @@ public class AlunoServiceImplTest {
         when(alunoRepositoryMock.existsByNomeAndDataNascimentoAndNomeMaeAndNomePai(alunoExistente.getNome(), alunoExistente.getDataNascimento(), alunoExistente.getNomeMae(), alunoExistente.getNomePai())).thenReturn(true);
 
         // Act
-            // Assert
+        // Assert
         assertThrows(CustomException.class, () -> alunoService.create(alunoExistente));
+    }
+
+    @Test
+    public void createReturnFail2() throws Exception {
+        // Arrange
+        // Mock do comportamento do validation
+        when(alunoValidationMock.validateSerie(alunoExistente.getSerie())).thenReturn(alunoExistente.getSerie());
+        when(alunoValidationMock.validateSegmento(alunoExistente.getSegmento())).thenReturn(alunoExistente.getSegmento());
+        when(alunoValidationMock.validateDataNascimento(alunoExistente.getDataNascimento())).thenReturn(LocalDate.of(2020, 3, 18));
+
+        // Mock do comportamento do repository
+        when(alunoRepositoryMock.existsByNomeAndDataNascimentoAndNomeMaeAndNomePai(alunoExistente.getNome(), alunoExistente.getDataNascimento(), alunoExistente.getNomeMae(), alunoExistente.getNomePai())).thenReturn(true);
+
+        // Act
+        // Assert
+        try {
+            Aluno aluno = alunoService.create(alunoExistente);
+        } catch (CustomException e) {
+            //System.out.println("Mensagem da Exceção: " + e.getMessage());
+            assertEquals("Aluno já foi cadastrado", e.getMessage());
+        }
+
     }
 
     @Test

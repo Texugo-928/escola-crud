@@ -2,6 +2,7 @@ package com.escola.domain.repository;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.ArrayList;
@@ -26,10 +27,7 @@ public class AlunoRepositoryIntegratedTest {
 
     private static Long contador = -1L; //O Id no BD vai aumentando para cada teste. Essa variável serve para controlar esse aumento.
     private String nome = "Aluno3";
-    private String dataNascimento = "2020-02-25";
     private String serie = "G2";
-    private String nomeMae = "Mãe do Aluno3";
-    private String nomePai = "Pai do Aluno3";
 
     private Aluno alunoExistente = generateAluno();
     private List<Aluno> listAlunoExistente = generateListAluno();
@@ -68,6 +66,9 @@ public class AlunoRepositoryIntegratedTest {
         // Assert //
         assertEquals(false, listAlunoEncontrado.isEmpty());
         assertEquals(2, listAlunoEncontrado.size());
+        assertNotEquals(listAlunoExistente, listAlunoEncontrado);
+        assertNotEquals(listAlunoExistente.get(0), listAlunoEncontrado.get(0));
+        assertNotEquals(listAlunoExistente.get(1), listAlunoEncontrado.get(1));
         assertEquals(listAlunoExistente.get(0).getNome(), listAlunoEncontrado.get(0).getNome());
         assertEquals(listAlunoExistente.get(0).getDataNascimento(), listAlunoEncontrado.get(0).getDataNascimento());
         assertEquals(listAlunoExistente.get(0).getNomeMae(), listAlunoEncontrado.get(0).getNomeMae());
@@ -101,6 +102,7 @@ public class AlunoRepositoryIntegratedTest {
 
         // Assert //
         assertEquals(true, alunoEncontradoOptional.isPresent());
+        assertNotEquals(alunoExistente, alunoEncontradoOptional);
         assertEquals(alunoExistente.getNome(), alunoEncontradoOptional.get().getNome());
         assertEquals(alunoExistente.getDataNascimento(), alunoEncontradoOptional.get().getDataNascimento());
         assertEquals(alunoExistente.getNomeMae(), alunoEncontradoOptional.get().getNomeMae());
@@ -128,6 +130,7 @@ public class AlunoRepositoryIntegratedTest {
 
         // Assert //
         assertEquals(true, alunoEncontradoOptional.isPresent());
+        assertNotEquals(alunoExistente, alunoEncontradoOptional);
         assertEquals(alunoExistente.getNome(), alunoEncontradoOptional.get().getNome());
         assertEquals(alunoExistente.getDataNascimento(), alunoEncontradoOptional.get().getDataNascimento());
         assertEquals(alunoExistente.getNomeMae(), alunoEncontradoOptional.get().getNomeMae());
@@ -156,6 +159,9 @@ public class AlunoRepositoryIntegratedTest {
         // Assert //
         assertEquals(false, listAlunoEncontrado.isEmpty());
         assertEquals(2, listAlunoEncontrado.size());
+        assertNotEquals(listAlunoExistente, listAlunoEncontrado);
+        assertNotEquals(listAlunoExistente.get(0), listAlunoEncontrado.get(0));
+        assertNotEquals(listAlunoExistente.get(1), listAlunoEncontrado.get(1));
         assertEquals(listAlunoExistente.get(0).getNome(), listAlunoEncontrado.get(0).getNome());
         assertEquals(listAlunoExistente.get(0).getDataNascimento(), listAlunoEncontrado.get(0).getDataNascimento());
         assertEquals(listAlunoExistente.get(0).getNomeMae(), listAlunoEncontrado.get(0).getNomeMae());
@@ -194,7 +200,7 @@ public class AlunoRepositoryIntegratedTest {
         // Arrange //
 
         // Act //
-        boolean result = alunoRepository.existsByNomeAndDataNascimentoAndNomeMaeAndNomePai(nome, dataNascimento, nomeMae, nomePai);
+        boolean result = alunoRepository.existsByNomeAndDataNascimentoAndNomeMaeAndNomePai(nome, "2020-02-25", "Mãe do Aluno3", "Pai do Aluno3");
 
         // Assert //
         assertEquals(false, result);

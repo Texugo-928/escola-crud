@@ -1,6 +1,7 @@
 package com.escola.domain.repository;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
@@ -53,7 +54,7 @@ public class AlunoRepositoryTest {
     public void findAll_ExistingAlunoTest() {
         // Arrange //
         // Mock do comportamento do repository
-        when(alunoRepositoryMock.findAll()).thenReturn(listAlunoExistente);
+        when(alunoRepositoryMock.findAll()).thenReturn(generateListAluno());
 
         // Act //
         List<Aluno> listAlunoEncontrado = alunoRepositoryMock.findAll();
@@ -61,8 +62,17 @@ public class AlunoRepositoryTest {
         // Assert //
         assertEquals(false, listAlunoEncontrado.isEmpty());
         assertEquals(2, listAlunoEncontrado.size());
-        assertEquals(listAlunoExistente.get(0), listAlunoEncontrado.get(0));
-        assertEquals(listAlunoExistente.get(1), listAlunoEncontrado.get(1));
+        assertNotEquals(listAlunoExistente, listAlunoEncontrado);
+        assertNotEquals(listAlunoExistente.get(0), listAlunoEncontrado.get(0));
+        assertNotEquals(listAlunoExistente.get(1), listAlunoEncontrado.get(1));
+        assertEquals(listAlunoExistente.get(0).getNome(), listAlunoEncontrado.get(0).getNome());
+        assertEquals(listAlunoExistente.get(0).getDataNascimento(), listAlunoEncontrado.get(0).getDataNascimento());
+        assertEquals(listAlunoExistente.get(0).getNomeMae(), listAlunoEncontrado.get(0).getNomeMae());
+        assertEquals(listAlunoExistente.get(0).getNomePai(), listAlunoEncontrado.get(0).getNomePai());
+        assertEquals(listAlunoExistente.get(1).getNome(), listAlunoEncontrado.get(1).getNome());
+        assertEquals(listAlunoExistente.get(1).getDataNascimento(), listAlunoEncontrado.get(1).getDataNascimento());
+        assertEquals(listAlunoExistente.get(1).getNomeMae(), listAlunoEncontrado.get(1).getNomeMae());
+        assertEquals(listAlunoExistente.get(1).getNomePai(), listAlunoEncontrado.get(1).getNomePai());
     }
 
     @Test
@@ -83,14 +93,18 @@ public class AlunoRepositoryTest {
     public void findById_ExistingAlunoTest() {
         // Arrange //
         // Mock do comportamento do repository
-        when(alunoRepositoryMock.findById(id)).thenReturn(Optional.of(alunoExistente));
+        when(alunoRepositoryMock.findById(id)).thenReturn(Optional.of(generateAluno()));
 
         // Act //
         Optional<Aluno> alunoEncontradoOptional = alunoRepositoryMock.findById(id);
 
         // Assert //
         assertEquals(true, alunoEncontradoOptional.isPresent());
-        assertEquals(alunoExistente, alunoEncontradoOptional.get());
+        assertNotEquals(alunoExistente, alunoEncontradoOptional);
+        assertEquals(alunoExistente.getNome(), alunoEncontradoOptional.get().getNome());
+        assertEquals(alunoExistente.getDataNascimento(), alunoEncontradoOptional.get().getDataNascimento());
+        assertEquals(alunoExistente.getNomeMae(), alunoEncontradoOptional.get().getNomeMae());
+        assertEquals(alunoExistente.getNomePai(), alunoEncontradoOptional.get().getNomePai());
     }
 
     @Test
@@ -111,14 +125,18 @@ public class AlunoRepositoryTest {
     public void findFirstByNome_ExistingAlunoTest() {
         // Arrange //
         // Mock do comportamento do repository
-        when(alunoRepositoryMock.findFirstByNome(nome)).thenReturn(Optional.of(alunoExistente));
+        when(alunoRepositoryMock.findFirstByNome(nome)).thenReturn(Optional.of(generateAluno()));
 
         // Act //
         Optional<Aluno> alunoEncontradoOptional = alunoRepositoryMock.findFirstByNome(nome);
 
         // Assert //
         assertEquals(true, alunoEncontradoOptional.isPresent());
-        assertEquals(alunoExistente, alunoEncontradoOptional.get());
+        assertNotEquals(alunoExistente, alunoEncontradoOptional);
+        assertEquals(alunoExistente.getNome(), alunoEncontradoOptional.get().getNome());
+        assertEquals(alunoExistente.getDataNascimento(), alunoEncontradoOptional.get().getDataNascimento());
+        assertEquals(alunoExistente.getNomeMae(), alunoEncontradoOptional.get().getNomeMae());
+        assertEquals(alunoExistente.getNomePai(), alunoEncontradoOptional.get().getNomePai());
     }
 
     @Test
@@ -139,7 +157,7 @@ public class AlunoRepositoryTest {
     public void findBySerie_ExistingAlunoTest() {
         // Arrange //
         // Mock do comportamento do repository
-        when(alunoRepositoryMock.findBySerie(serie)).thenReturn(listAlunoExistente);
+        when(alunoRepositoryMock.findBySerie(serie)).thenReturn(generateListAluno());
 
         // Act //
         List<Aluno> listAlunoEncontrado = alunoRepositoryMock.findBySerie(serie);
@@ -147,8 +165,17 @@ public class AlunoRepositoryTest {
         // Assert //
         assertEquals(false, listAlunoEncontrado.isEmpty());
         assertEquals(2, listAlunoEncontrado.size());
-        assertEquals(listAlunoExistente.get(0), listAlunoEncontrado.get(0));
-        assertEquals(listAlunoExistente.get(1), listAlunoEncontrado.get(1));
+        assertNotEquals(listAlunoExistente, listAlunoEncontrado);
+        assertNotEquals(listAlunoExistente.get(0), listAlunoEncontrado.get(0));
+        assertNotEquals(listAlunoExistente.get(1), listAlunoEncontrado.get(1));
+        assertEquals(listAlunoExistente.get(0).getNome(), listAlunoEncontrado.get(0).getNome());
+        assertEquals(listAlunoExistente.get(0).getDataNascimento(), listAlunoEncontrado.get(0).getDataNascimento());
+        assertEquals(listAlunoExistente.get(0).getNomeMae(), listAlunoEncontrado.get(0).getNomeMae());
+        assertEquals(listAlunoExistente.get(0).getNomePai(), listAlunoEncontrado.get(0).getNomePai());
+        assertEquals(listAlunoExistente.get(1).getNome(), listAlunoEncontrado.get(1).getNome());
+        assertEquals(listAlunoExistente.get(1).getDataNascimento(), listAlunoEncontrado.get(1).getDataNascimento());
+        assertEquals(listAlunoExistente.get(1).getNomeMae(), listAlunoEncontrado.get(1).getNomeMae());
+        assertEquals(listAlunoExistente.get(1).getNomePai(), listAlunoEncontrado.get(1).getNomePai());
     }
 
     @Test
