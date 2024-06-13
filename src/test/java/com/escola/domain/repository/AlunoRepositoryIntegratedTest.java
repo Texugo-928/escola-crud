@@ -1,6 +1,7 @@
 package com.escola.domain.repository;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.ArrayList;
@@ -45,17 +46,14 @@ public class AlunoRepositoryIntegratedTest {
     @Test
     public void deleteByIdTest() {
         // Arrange //
-        boolean result = false;
+        boolean teste = alunoRepository.existsById(contador);
 
         // Act //
-        try {
-            alunoRepository.deleteById(alunoExistente.getId());
-            result = true;
-        }
-        catch (Exception e) {}
+        alunoRepository.deleteById(contador);
 
         // Assert //
-        assertEquals(true, result);
+        assertEquals(true, teste);
+        assertFalse(alunoRepository.existsById(contador));        
     }
 
     // Não faz muito sentido testar o caso de Id inválido já que o retorno do método é void.

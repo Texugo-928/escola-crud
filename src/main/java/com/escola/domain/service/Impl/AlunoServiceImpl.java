@@ -16,10 +16,11 @@ import com.escola.domain.service.validation.Impl.AlunoValidationImpl;
 public class AlunoServiceImpl implements AlunoService {
 
     private final AlunoRepository alunoRepository;
-    private final AlunoValidation alunoValidation = new AlunoValidationImpl();
+    private final AlunoValidation alunoValidation;
 
     public AlunoServiceImpl(AlunoRepository alunoRepository) {
         this.alunoRepository = alunoRepository;
+        this.alunoValidation = new AlunoValidationImpl();
     }
 
     @Override
@@ -69,6 +70,7 @@ public class AlunoServiceImpl implements AlunoService {
         return alunoRepository.findAll();
     }
 
+    // TODO: Precisa implementar corretamente
     @Override
     public Aluno update(Long id, String nome, String dataNascimento, String serie, String segmento, String nomeMae, String nomePai) {
         Aluno aluno = alunoRepository.findById(id).orElseThrow();
