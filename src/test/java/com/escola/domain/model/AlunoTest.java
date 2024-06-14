@@ -11,6 +11,7 @@ import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class AlunoTest {
@@ -152,7 +153,7 @@ public class AlunoTest {
         return listEndereco;
     }
 
-    private String generateAlunoSerialization() throws Exception {
+    private String generateAlunoSerialization() throws JsonProcessingException {
         Aluno aluno = generateAluno();
 
         ObjectMapper objectMapper = new ObjectMapper();

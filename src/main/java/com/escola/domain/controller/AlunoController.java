@@ -42,7 +42,7 @@ public class AlunoController {
     @ApiResponses(value = {
         @ApiResponse(
             responseCode = "201",
-            description = "User created successfully",
+            description = "Aluno created successfully",
             content = @Content(
                 mediaType = "application/json",
                 schema = @Schema(implementation = Aluno.class),
@@ -69,10 +69,7 @@ public class AlunoController {
         try{
             Aluno alunoCreated = alunoService.create(alunoToCreate);
 
-            URI location = ServletUriComponentsBuilder.fromCurrentRequest()
-                .path("/{id}")
-                .buildAndExpand(alunoCreated.getId())
-                .toUri();
+            URI location = generateUriById(alunoCreated);
     
             return ResponseEntity.created(location).body(alunoCreated);
         }
@@ -149,7 +146,7 @@ public class AlunoController {
             content = @Content(
                 mediaType = "application/json",
                 schema = @Schema(implementation = Aluno.class),
-                examples = @ExampleObject(value = "[{\"id\": 1, \"name\": \"John Doe\", \"dataNascimento\": \"2020-02-25\", \"endereco\": [{ \"id\": 1, \"tipo\": \"Residencial\", \"rua\": \"Rua dos calçados\", \"numero\": \"123\", \"cep\": \"82222-585\", \"complemento\": \"casa 1\" }], \"serie\": \"G1\", \"segmento\": \"Infantil\", \"nomePai\": \"São João\", \"nomeMae\": \"Alice Pires\" }]")
+                examples = @ExampleObject(value = "[{\"id\": 1, \"name\": \"John Doe\", \"dataNascimento\": \"2020-02-25\", \"endereco\": [{ \"id\": 1, \"tipo\": \"Residencial\", \"rua\": \"Rua dos calçados\", \"numero\": \"123\", \"cep\": \"82222-585\", \"complemento\": \"casa 1\" }], \"serie\": \"G1\", \"segmento\": \"Infantil\", \"nomePai\": \"São João\", \"nomeMae\": \"Alice Pires\" }, {\\\"id\\\": 2, \\\"name\\\": \\\"John Edgar\\\", \\\"dataNascimento\\\": \\\"2020-02-25\\\", \\\"endereco\\\": [{ \\\"id\\\": 2, \\\"tipo\\\": \\\"Residencial\\\", \\\"rua\\\": \\\"Rua dos calçados\\\", \\\"numero\\\": \\\"123\\\", \\\"cep\\\": \\\"82222-585\\\", \\\"complemento\\\": \\\"casa 1\\\" }], \\\"serie\\\": \\\"G1\\\", \\\"segmento\\\": \\\"Infantil\\\", \\\"nomePai\\\": \\\"São João\\\", \\\"nomeMae\\\": \\\"Alice Pires\\\" }]")
             )            
         ),
         @ApiResponse(
@@ -178,7 +175,7 @@ public class AlunoController {
             content = @Content(
                 mediaType = "application/json",
                 schema = @Schema(implementation = Aluno.class),
-                examples = @ExampleObject(value = "[{\"id\": 1, \"name\": \"John Doe\", \"dataNascimento\": \"2020-02-25\", \"endereco\": [{ \"id\": 1, \"tipo\": \"Residencial\", \"rua\": \"Rua dos calçados\", \"numero\": \"123\", \"cep\": \"82222-585\", \"complemento\": \"casa 1\" }], \"serie\": \"G1\", \"segmento\": \"Infantil\", \"nomePai\": \"São João\", \"nomeMae\": \"Alice Pires\" }]")
+                examples = @ExampleObject(value = "[{\"id\": 1, \"name\": \"John Doe\", \"dataNascimento\": \"2020-02-25\", \"endereco\": [{ \"id\": 1, \"tipo\": \"Residencial\", \"rua\": \"Rua dos calçados\", \"numero\": \"123\", \"cep\": \"82222-585\", \"complemento\": \"casa 1\" }], \"serie\": \"G1\", \"segmento\": \"Infantil\", \"nomePai\": \"São João\", \"nomeMae\": \"Alice Pires\" }, {\\\"id\\\": 2, \\\"name\\\": \\\"John Edgar\\\", \\\"dataNascimento\\\": \\\"2020-02-25\\\", \\\"endereco\\\": [{ \\\"id\\\": 2, \\\"tipo\\\": \\\"Residencial\\\", \\\"rua\\\": \\\"Rua dos calçados\\\", \\\"numero\\\": \\\"123\\\", \\\"cep\\\": \\\"82222-585\\\", \\\"complemento\\\": \\\"casa 1\\\" }], \\\"serie\\\": \\\"G1\\\", \\\"segmento\\\": \\\"Infantil\\\", \\\"nomePai\\\": \\\"São João\\\", \\\"nomeMae\\\": \\\"Alice Pires\\\" }]")
             )            
         )
     })
@@ -192,10 +189,7 @@ public class AlunoController {
     public ResponseEntity<Aluno> update(@RequestBody Aluno alunoToUpdate) {
         Aluno alunoUpdated = alunoService.update(alunoToUpdate.getId(), alunoToUpdate.getNome(), alunoToUpdate.getDataNascimento(), alunoToUpdate.getSerie(), alunoToUpdate.getSegmento(), alunoToUpdate.getNomeMae(), alunoToUpdate.getNomePai());
 
-        URI location = ServletUriComponentsBuilder.fromCurrentRequest()
-            .path("/{id}")
-            .buildAndExpand(alunoUpdated.getId())
-            .toUri();
+        URI location = generateUriById(alunoUpdated);
 
         return ResponseEntity.created(location).body(alunoUpdated);
     }
@@ -226,6 +220,17 @@ public class AlunoController {
         Aluno alunoDeleted = alunoService.delete(id);
 
         return ResponseEntity.ok(alunoDeleted);
+    }
+
+    private URI generateUriById(Aluno aluno) {
+        
+        URI location = ServletUriComponentsBuilder
+        .fromCurrentRequest()
+            .path("/{id}")
+            .buildAndExpand(aluno.getId())
+            .toUri();
+            
+        return location;
     }
 
 }
